@@ -15,7 +15,7 @@ public:
     using reference = T&;
 
     explicit BreadbinIterator() {}
-    explicit BreadbinIterator(pointer start_addr) : start_addr(start_addr) {}
+    explicit BreadbinIterator(pointer start_addr, difference_type ind) : start_addr(start_addr), ind(ind) {}
 
     explicit BreadbinIterator(const BreadbinIterator& other) : ind(other.ind) {}
 
@@ -79,36 +79,44 @@ public:
     // TODO: Maybe nodiscard??
     explicit Breadbin() { /* Do nothing! */ }
 
-    explicit Breadbin(const Breadbin& other)
+    explicit Breadbin(const Breadbin& other) : _size(other._size)
     {
         std::copy(other.data, other.data + other.capacity(), data);
     }
 
-    explicit Breadbin(std::initializer_list<value_type> vals)
+    explicit Breadbin(std::initializer_list<value_type> vals) : _size(vals.size())
     {
         std::copy(std::begin(vals), std::end(vals), data);
     }
 
     Breadbin operator=(Breadbin other)
     {
+        _size = other._size;
         std::copy(other.data, other.data + other.capacity(), data);
     }
 
     Breadbin operator=(Breadbin&& other)
     {
+        _size = other._size;
         std::copy(other.data, other.data + other.capacity(), data);
     }
 
     iterator begin()
     {
-        return BreadbinIterator<value_type>(data);
+        return BreadbinIterator<value_type>(data, 0);
     }
 
     iterator end()
     {
-        return BreadbinIterator<value_type>(data + capacity());
+        return BreadbinIterator<value_type>(data, _size);
+    }
+
+    size_type size()
+    {
+        return _size;
     }
 
 private:
     value_type data[10]; // The breadbin always contains 10 elements
+    size_type _size;
 };
