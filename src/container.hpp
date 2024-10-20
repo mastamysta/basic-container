@@ -89,7 +89,7 @@ public:
         std::copy(std::begin(vals), std::end(vals), data);
     }
 
-    Breadbin operator=(Breadbin other)
+    Breadbin operator=(const Breadbin& other)
     {
         _size = other._size;
         std::copy(other.data, other.data + other.capacity(), data);
